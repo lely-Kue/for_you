@@ -1,0 +1,842 @@
+import base64
+import os
+
+paths = [
+    r'C:\Users\Lynn Nyamana\.gemini\antigravity\brain\4dbe04d5-3484-4a25-9b70-420db49cf704\memory_slide1_1774566955515.png',
+    r'C:\Users\Lynn Nyamana\.gemini\antigravity\brain\4dbe04d5-3484-4a25-9b70-420db49cf704\memory_slide2_1774567049877.png',
+    r'C:\Users\Lynn Nyamana\.gemini\antigravity\brain\4dbe04d5-3484-4a25-9b70-420db49cf704\memory_slide3_1774567103722.png'
+]
+
+imgs = []
+for p in paths:
+    if os.path.exists(p):
+        with open(p, 'rb') as f:
+            b64 = base64.b64encode(f.read()).decode()
+        imgs.append('data:image/png;base64,' + b64)
+    else:
+        imgs.append('')
+        print(f"Warning: image not found {p}")
+
+html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You, Always 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Great+Vibes&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+
+    :root {{
+      --rose: #e8a4b8;
+      --deep-rose: #c27090;
+      --blush: #f2c4d0;
+      --lavender: #d4a8cc;
+      --cream: #fdf0f4;
+      --dark: #1a0d14;
+      --dark2: #231320;
+    }}
+
+    body {{
+      font-family: "Lato", sans-serif;
+      background: var(--dark);
+      color: #f5e6ec;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }}
+
+    /* ========== SNOW ========== */
+    #snow-canvas {{
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }}
+
+    /* ========== LOGIN SCREEN ========== */
+    #login-screen {{
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      background: radial-gradient(ellipse at center, #2a0f1e 0%, #0e0509 100%);
+      transition: opacity 1.2s ease, visibility 1.2s ease;
+    }}
+    #login-screen.hide {{
+      opacity: 0;
+      visibility: hidden;
+    }}
+
+    /* ========== WELCOME OVERLAY ========== */
+    #welcome-screen {{
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      background: var(--dark);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1.5s ease, visibility 1.5s ease;
+      text-align: center;
+      padding: 0 2rem;
+    }}
+    #welcome-screen.visible {{
+      opacity: 1;
+      visibility: visible;
+    }}
+    .welcome-name {{
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 400;
+      font-size: clamp(3.5rem, 8vw, 6rem);
+      color: var(--rose);
+      text-shadow: 0 0 40px rgba(232,164,184,0.6);
+      margin-bottom: 1rem;
+      animation: scale-up 3s ease-out forwards;
+    }}
+    .welcome-message {{
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: var(--lavender);
+      opacity: 0;
+      animation: fade-in-up 2s ease forwards 1.5s;
+    }}
+
+    @keyframes scale-up {{
+      0% {{ transform: scale(0.9); opacity: 0; }}
+      100% {{ transform: scale(1); opacity: 1; }}
+    }}
+    @keyframes fade-in-up {{
+      0% {{ transform: translateY(20px); opacity: 0; }}
+      100% {{ transform: translateY(0); opacity: 1; }}
+    }}
+
+    .login-box {{
+      text-align: center;
+      padding: 3rem 2.5rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(232,164,184,0.25);
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 0 60px rgba(194,112,144,0.15), 0 0 120px rgba(194,112,144,0.05);
+    }}
+
+    .login-flower {{
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }}
+
+    @keyframes float {{
+      0%, 100% {{ transform: translateY(0px); }}
+      50% {{ transform: translateY(-12px); }}
+    }}
+
+    .login-title {{
+      font-family: "Great Vibes", cursive;
+      font-size: 2.8rem;
+      color: var(--rose);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px rgba(232,164,184,0.5);
+    }}
+
+    .login-subtitle {{
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: rgba(245,230,236,0.55);
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+    }}
+
+    .login-input {{
+      width: 100%;
+      padding: 0.85rem 1.2rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(232,164,184,0.3);
+      border-radius: 50px;
+      color: #f5e6ec;
+      font-size: 1rem;
+      text-align: center;
+      letter-spacing: 0.1em;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      font-family: "Lato", sans-serif;
+      margin-bottom: 1rem;
+    }}
+    .login-input:focus {{
+      border-color: var(--rose);
+      box-shadow: 0 0 20px rgba(232,164,184,0.2);
+    }}
+    .login-input::placeholder {{ color: rgba(245,230,236,0.3); }}
+
+    .login-btn {{
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, var(--deep-rose), var(--lavender));
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-size: 1rem;
+      font-family: "Lato", sans-serif;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 4px 20px rgba(194,112,144,0.4);
+    }}
+    .login-btn:hover {{ transform: translateY(-2px); box-shadow: 0 6px 28px rgba(194,112,144,0.55); }}
+    .login-btn:active {{ transform: translateY(0); }}
+
+    .login-error {{
+      color: #f0a0b0;
+      font-size: 0.85rem;
+      margin-top: 0.8rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }}
+    .login-error.visible {{ opacity: 1; }}
+
+    /* ========== MAIN CONTENT ========== */
+    #main-content {{
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 1.5s ease 0.3s;
+    }}
+    #main-content.visible {{ opacity: 1; }}
+
+    /* ========== HERO ========== */
+    .hero {{
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      background: radial-gradient(ellipse at 50% 30%, #3a0f25 0%, transparent 70%);
+    }}
+
+    .hero-petals {{
+      font-size: 1.5rem;
+      letter-spacing: 0.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.7;
+      animation: spin-slow 20s linear infinite;
+    }}
+    @keyframes spin-slow {{
+      from {{ transform: rotate(0deg); }}
+      to {{ transform: rotate(360deg); }}
+    }}
+
+    .hero-title {{
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: var(--rose);
+      line-height: 1.1;
+      text-shadow: 0 0 40px rgba(232,164,184,0.6), 0 0 80px rgba(232,164,184,0.2);
+      margin-bottom: 1rem;
+      animation: glow-pulse 4s ease-in-out infinite;
+    }}
+    @keyframes glow-pulse {{
+      0%, 100% {{ text-shadow: 0 0 40px rgba(232,164,184,0.6), 0 0 80px rgba(232,164,184,0.2); }}
+      50% {{ text-shadow: 0 0 60px rgba(232,164,184,0.9), 0 0 100px rgba(232,164,184,0.4); }}
+    }}
+
+    .hero-sub {{
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: var(--lavender);
+      margin-bottom: 2rem;
+      opacity: 0.85;
+    }}
+
+    .hero-year {{
+      font-size: 0.85rem;
+      letter-spacing: 0.35em;
+      color: rgba(232,164,184,0.5);
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+    }}
+
+    .scroll-hint {{
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: rgba(245,230,236,0.35);
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }}
+    @keyframes bounce {{
+      0%, 100% {{ transform: translateY(0); }}
+      50% {{ transform: translateY(8px); }}
+    }}
+
+    /* ========== SECTIONS ========== */
+    section {{
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }}
+
+    .section-label {{
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--deep-rose);
+      margin-bottom: 1rem;
+      text-align: center;
+    }}
+
+    .letter-block {{
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(232,164,184,0.12);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      backdrop-filter: blur(4px);
+    }}
+
+    .letter-block::before {{
+      content: "\\201C";
+      font-family: "Cormorant Garamond", serif;
+      font-size: 6rem;
+      color: rgba(232,164,184,0.12);
+      position: absolute;
+      top: -1rem;
+      left: 1.2rem;
+      line-height: 1;
+    }}
+
+    .letter-text {{
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+      line-height: 1.9;
+      color: rgba(245,230,236,0.88);
+    }}
+
+    .letter-text em {{
+      color: var(--rose);
+      font-style: italic;
+    }}
+
+    .letter-text strong {{
+      color: var(--blush);
+    }}
+
+    /* ========== BIBLE VERSE CARDS ========== */
+    .verse-card {{
+      border-left: 3px solid var(--deep-rose);
+      padding: 1.5rem 1.8rem;
+      background: rgba(194,112,144,0.07);
+      border-radius: 0 16px 16px 0;
+      margin: 2rem 0;
+      position: relative;
+    }}
+
+    .verse-text {{
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--blush);
+      line-height: 1.8;
+      margin-bottom: 0.6rem;
+    }}
+
+    .verse-ref {{
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--deep-rose);
+      text-transform: uppercase;
+    }}
+
+    /* ========== MEMORY SLIDES ========== */
+    .memories-section {{
+      padding: 5rem 2rem;
+    }}
+
+    .memories-title {{
+      font-family: "Great Vibes", cursive;
+      font-size: 3.5rem;
+      color: var(--rose);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }}
+
+    .memories-sub {{
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: rgba(245,230,236,0.45);
+      text-align: center;
+      margin-bottom: 3rem;
+    }}
+
+    .slides-wrapper {{
+      position: relative;
+      max-width: 640px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid rgba(232,164,184,0.2);
+      box-shadow: 0 0 60px rgba(194,112,144,0.2);
+    }}
+
+    .slide {{
+      display: none;
+      position: relative;
+    }}
+    .slide.active {{ display: block; }}
+
+    .slide img {{
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      display: block;
+    }}
+
+    .slide-caption {{
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(14,5,9,0.95) 0%, transparent 100%);
+      padding: 3rem 2rem 1.8rem;
+      text-align: center;
+    }}
+
+    .slide-caption p {{
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: rgba(245,230,236,0.85);
+      line-height: 1.7;
+    }}
+
+    .slide-caption .slide-num {{
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--rose);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }}
+
+    .slide-controls {{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }}
+
+    .slide-dot {{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(232,164,184,0.25);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      border: none;
+    }}
+    .slide-dot.active {{
+      background: var(--rose);
+      transform: scale(1.3);
+    }}
+
+    .slide-btn {{
+      background: rgba(232,164,184,0.1);
+      border: 1px solid rgba(232,164,184,0.25);
+      color: var(--rose);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }}
+    .slide-btn:hover {{ background: rgba(232,164,184,0.2); }}
+
+    /* ========== CLOSING ========== */
+    .closing {{
+      text-align: center;
+      padding: 5rem 2rem 8rem;
+    }}
+
+    .closing-title {{
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      color: var(--rose);
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 40px rgba(232,164,184,0.4);
+    }}
+
+    .closing-text {{
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: rgba(245,230,236,0.7);
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.9;
+    }}
+
+    .closing-hearts {{
+      font-size: 2rem;
+      letter-spacing: 0.5rem;
+      margin-top: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }}
+
+    .signature {{
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 2rem;
+      color: var(--deep-rose);
+      margin-top: 2rem;
+    }}
+
+    /* ========== DIVIDER ========== */
+    .divider {{
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: 400px;
+      margin: 0 auto 3rem;
+    }}
+    .divider-line {{
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(232,164,184,0.3), transparent);
+    }}
+    .divider-icon {{ color: var(--rose); font-size: 1rem; }}
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 600px) {{
+      .slide img {{ height: 260px; }}
+      .letter-block {{ padding: 1.5rem; }}
+    }}
+  </style>
+</head>
+<body>
+
+<canvas id="snow-canvas"></canvas>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-flower">🌸</div>
+    <h1 class="login-title">This one's for you</h1>
+    <p class="login-subtitle">Only one person has the key to this place&hellip;</p>
+    <input
+      type="password"
+      id="pw-input"
+      class="login-input"
+      placeholder="Enter your password, love"
+      autocomplete="off"
+    />
+    <button class="login-btn" onclick="checkPassword()">Open the door 🗝️</button>
+    <p class="login-error" id="pw-error">Hmm, try again lovely 🌸</p>
+  </div>
+</div>
+
+<!-- WELCOME SCREEN -->
+<div id="welcome-screen">
+  <h1 class="welcome-name">Welcome, <br/>Hilda Kapfudzaruwa</h1>
+  <p class="welcome-message">This space was made just for you...</p>
+</div>
+
+<!-- AUDIO PLAYER -->
+<audio id="bg-music" loop>
+  <!-- Using a royalty-free emotional acoustic track. 
+       Note: You can easily replace this link with any mp3 of a specific song. -->
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_2202dfb141.mp3?filename=always-with-me-always-with-you-piano-123473.mp3" type="audio/mpeg">
+</audio>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-petals">✦ 🌸 ✦ 🌷 ✦ 🌸 ✦</div>
+    <h1 class="hero-title">Hey, You&hellip;</h1>
+    <p class="hero-sub">My forever person. My sister of the soul.</p>
+    <p class="hero-year">&#10022; Since 2018 &mdash; Magunje Barracks &#10022;</p>
+    <p class="scroll-hint">↓ scroll down, cry a little ↓</p>
+  </div>
+
+  <!-- LETTER PART 1 -->
+  <section>
+    <p class="section-label">✦ A letter from my heart ✦</p>
+
+    <div class="letter-block">
+      <p class="letter-text">
+        I don&rsquo;t even remember the exact moment we became friends. It wasn&rsquo;t a grand introduction, there was no big &ldquo;this is the beginning of something forever&rdquo; moment. It just&hellip; <em>happened</em>. One day we were two girls in Form 1 at Magunje Barracks, and then somehow, before I could blink, you were the person I told everything to.
+        <br /><br />
+        I still think about the year you stayed at our house. The way you just&hellip; <em>fit</em>. Like you were always supposed to be there. Like home was wherever we both were. And then Form 4 ended. Different advanced level schools. Different paths. But never &mdash; <strong>not even for a single day</strong> &mdash; did I stop thinking about you.
+      </p>
+    </div>
+
+    <div class="verse-card">
+      <p class="verse-text">&ldquo;A friend loves at all times, and a brother is born for a time of adversity.&rdquo;</p>
+      <p class="verse-ref">Proverbs 17:17</p>
+    </div>
+
+    <div class="letter-block">
+      <p class="letter-text">
+        It&rsquo;s been a year since I&rsquo;ve seen your face. <em>A whole year.</em> And I want you to know that in that year, I have carried you with me everywhere. In the quiet moments. In the loud ones. In the in-between&hellip; you are always there. 
+        <br /><br />
+        You are my <em>ride or die</em>. The one person on this earth who knows <strong>all of me</strong>. Every embarrassing thing. Every broken piece. Every ridiculous dream. You know it all &mdash; and you stayed. That&rsquo;s not something people find twice in a lifetime.
+      </p>
+    </div>
+  </section>
+
+  <!-- MEMORIES -->
+  <div class="memories-section">
+    <h2 class="memories-title">Our little universe</h2>
+    <p class="memories-sub">Three frames, a thousand feelings&hellip;</p>
+
+    <div class="slides-wrapper">
+      <div class="slide active" id="slide-0">
+        <img src="{imgs[0]}" alt="Memory 1" />
+        <div class="slide-caption">
+          <p class="slide-num">Memory 01 &middot; The Beginning</p>
+          <p>Back when it was all just school uniforms and loud laughter we didn&rsquo;t care who heard. The day we stopped being strangers &mdash; I&rsquo;d find it again a thousand times.</p>
+        </div>
+      </div>
+      <div class="slide" id="slide-1">
+        <img src="{imgs[1]}" alt="Memory 2" />
+        <div class="slide-caption">
+          <p class="slide-num">Memory 02 &middot; Our Year Together</p>
+          <p>You lived with us and it was the best kind of chaos. You weren&rsquo;t a guest &mdash; you were family. The kind the universe handpicks for you.</p>
+        </div>
+      </div>
+      <div class="slide" id="slide-2">
+        <img src="{imgs[2]}" alt="Memory 3" />
+        <div class="slide-caption">
+          <p class="slide-num">Memory 03 &middot; Who You Are</p>
+          <p>Even now, miles apart, growing up separately &mdash; you are still the most beautiful soul I know. Inside, and oh so much, outside too. 🌸</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-controls">
+      <button class="slide-btn" onclick="changeSlide(-1)">‹</button>
+      <button class="slide-dot active" onclick="goToSlide(0)"></button>
+      <button class="slide-dot" onclick="goToSlide(1)"></button>
+      <button class="slide-dot" onclick="goToSlide(2)"></button>
+      <button class="slide-btn" onclick="changeSlide(1)">›</button>
+    </div>
+  </div>
+
+  <!-- LETTER PART 2 - STRENGTH -->
+  <section>
+    <p class="section-label">✦ For when it gets heavy ✦</p>
+
+    <div class="letter-block">
+      <p class="letter-text">
+        I see you, you know. Behind the &ldquo;I&rsquo;m fine.&rdquo; Behind the strong face you put on for everyone. I see the girl who is carrying so much and still showing up with a smile. And while I love that version of you&hellip; <em>you don&rsquo;t have to perform strength for me.</em>
+        <br /><br />
+        Sometimes the bravest thing you can do is let yourself fall apart. To cry <strong>really, really hard</strong> &mdash; not because you&rsquo;re weak, but because you&rsquo;re human. Because what you&rsquo;re feeling is real and it deserves space. <em>Please stop faking it.</em> Your tears are not weakness. They are proof that you feel deeply, and that is one of the most beautiful things about you.
+      </p>
+    </div>
+
+    <div class="verse-card">
+      <p class="verse-text">&ldquo;He heals the brokenhearted and binds up their wounds.&rdquo;</p>
+      <p class="verse-ref">Psalm 147:3</p>
+    </div>
+
+    <div class="letter-block">
+      <p class="letter-text">
+        You have to be strong &mdash; but not for everyone, not for the world. <em>Be strong for your mom.</em> Because she looks at you and she sees the future. And be strong for yourself &mdash; because we still have <strong>so far to go</strong>. This life we are going to build&hellip; we are only at the beginning of it. The best chapters haven&rsquo;t even been written yet.
+        <br /><br />
+        The darkness you&rsquo;re walking through right now? It is not your home. It is just the road. And roads always lead somewhere.
+      </p>
+    </div>
+
+    <div class="verse-card">
+      <p class="verse-text">&ldquo;The Lord himself goes before you and will be with you; he will never leave you nor forsake you. Do not be afraid; do not be discouraged.&rdquo;</p>
+      <p class="verse-ref">Deuteronomy 31:8</p>
+    </div>
+
+    <div class="letter-block">
+      <p class="letter-text">
+        I need you to hear this and <em>really</em> hear it: <strong>You are beautiful</strong>. Not just on the surface, not just on the good days when the light hits right and you feel like yourself. You are beautiful in the mess. You are beautiful in the struggling. You are beautiful in the quiet moments when nobody&rsquo;s watching.
+        <br /><br />
+        <em>Inside you</em> lives something so rare &mdash; a heart that loves fiercely, a spirit that refuses to quit, a laugh that makes rooms lighter. Do not let anything convince you otherwise.
+      </p>
+    </div>
+
+    <div class="verse-card">
+      <p class="verse-text">&ldquo;I can do all things through Christ who strengthens me.&rdquo;</p>
+      <p class="verse-ref">Philippians 4:13</p>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-icon">🌸</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <h2 class="closing-title">You are worth it. All of it.</h2>
+    <p class="closing-text">
+      You are worth every dime spent on you, every prayer whispered for you, every mile between us that means nothing because you are still <em>mine</em> &mdash; my person, my sister, my built-in best friend for life.
+      <br /><br />
+      And yes, I am going to be the best aunt to your future children. <em>They better be cute though</em> &mdash; no pressure kkkk 💕
+      <br /><br />
+      I love you more than words in a website could ever hold. This is just a little proof that you live in my mind <strong>rent free</strong>, always.
+    </p>
+
+    <div class="closing-hearts">💕 🌸 💕</div>
+    <p class="signature">Always yours &mdash; Lynn 🌷</p>
+  </div>
+
+</div><!-- end main-content -->
+
+<script>
+  // ========== SNOW ==========
+  const canvas = document.getElementById("snow-canvas");
+  const ctx = canvas.getContext("2d");
+  let flakes = [];
+
+  function resize() {{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }}
+  resize();
+  window.addEventListener("resize", resize);
+
+  for (let i = 0; i < 120; i++) {{
+    flakes.push({{
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 3 + 0.5,
+      speed: Math.random() * 1.2 + 0.3,
+      drift: (Math.random() - 0.5) * 0.5,
+      opacity: Math.random() * 0.55 + 0.1
+    }});
+  }}
+
+  function drawSnow() {{
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    flakes.forEach(f => {{
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,235,245,${{f.opacity}})`;
+      ctx.fill();
+      f.y += f.speed;
+      f.x += f.drift;
+      if (f.y > canvas.height + 5) {{
+        f.y = -5;
+        f.x = Math.random() * canvas.width;
+      }}
+      if (f.x > canvas.width + 5) f.x = -5;
+      if (f.x < -5) f.x = canvas.width + 5;
+    }});
+    requestAnimationFrame(drawSnow);
+  }}
+  drawSnow();
+
+  // ========== LOGIN ==========
+  const PASSWORD = "hilyn";
+  const loginScreen = document.getElementById("login-screen");
+  const welcomeScreen = document.getElementById("welcome-screen");
+  const mainContent = document.getElementById("main-content");
+  const pwInput = document.getElementById("pw-input");
+  const pwError = document.getElementById("pw-error");
+  const bgMusic = document.getElementById("bg-music");
+
+  function checkPassword() {{
+    if (pwInput.value.trim().toLowerCase() === PASSWORD) {{
+      // Start music on first interaction
+      bgMusic.volume = 0.5;
+      bgMusic.play().catch(e => console.log("Audio play failed:", e));
+
+      // Hide login
+      loginScreen.classList.add("hide");
+      
+      setTimeout(() => {{
+        loginScreen.style.display = "none";
+        // Show welcome overlay
+        welcomeScreen.classList.add("visible");
+        
+        // After 4.5 seconds, hide welcome and show main content
+        setTimeout(() => {{
+          welcomeScreen.classList.remove("visible");
+          setTimeout(() => {{
+            welcomeScreen.style.display = "none";
+            mainContent.classList.add("visible");
+          }}, 1500); // wait for welcome screen to fade out
+        }}, 4500);
+
+      }}, 1300); // wait for login screen to fade out
+    }} else {{
+      pwError.classList.add("visible");
+      pwInput.value = "";
+      pwInput.classList.add("shake");
+      setTimeout(() => pwInput.classList.remove("shake"), 500);
+    }}
+  }}
+
+  pwInput.addEventListener("keydown", e => {{
+    if (e.key === "Enter") checkPassword();
+    pwError.classList.remove("visible");
+  }});
+
+  // ========== SLIDES ==========
+  let currentSlide = 0;
+  const totalSlides = 3;
+
+  function updateSlides() {{
+    document.querySelectorAll(".slide").forEach((s, i) => {{
+      s.classList.toggle("active", i === currentSlide);
+    }});
+    document.querySelectorAll(".slide-dot").forEach((d, i) => {{
+      d.classList.toggle("active", i === currentSlide);
+    }});
+  }}
+
+  function changeSlide(dir) {{
+    currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
+    updateSlides();
+  }}
+
+  function goToSlide(index) {{
+    currentSlide = index;
+    updateSlides();
+  }}
+
+  // Auto-advance slides
+  setInterval(() => changeSlide(1), 5000);
+</script>
+
+<style>
+  @keyframes shake {{
+    0%, 100% {{ transform: translateX(0); }}
+    25% {{ transform: translateX(-8px); }}
+    75% {{ transform: translateX(8px); }}
+  }}
+  .shake {{ animation: shake 0.4s ease; }}
+</style>
+
+</body>
+</html>"""
+
+with open(r'index.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+
+print("Generated index.html successfully.")
