@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Lock, Unlock, Music, Play, Sparkles, Star } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
@@ -306,7 +306,7 @@ export default function BirthdaySurprise() {
 
         {/* Background audio from YouTube (hidden) */}
         <div className="hidden">
-          <ReactPlayer 
+          <ReactPlayer
             src="https://www.youtube.com/watch?v=ShZ978fBl6Y"
             playing={isPlaying}
             loop={true}
