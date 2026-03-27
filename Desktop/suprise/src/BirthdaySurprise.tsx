@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Lock, Unlock, Music, Play, Sparkles, Star } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
+import ReactPlayer from 'react-player';
 
 // ─── Starry Night Background ───────────────────────────────────────────────
 const stars = [...Array(150)].map((_, i) => ({
@@ -129,7 +130,6 @@ export default function BirthdaySurprise() {
   const [password, setPassword] = useState('');
   const [currentSegment, setCurrentSegment] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const SECRET = 'moyo';
 
@@ -148,7 +148,6 @@ export default function BirthdaySurprise() {
   const startCinematic = () => {
     setAppState('cinematic');
     setIsPlaying(true);
-    audioRef.current?.play().catch(() => { });
   };
 
   const nextSegment = () => {
@@ -159,9 +158,7 @@ export default function BirthdaySurprise() {
   };
 
   const toggleAudio = () => {
-    if (!audioRef.current) return;
-    if (isPlaying) { audioRef.current.pause(); setIsPlaying(false); }
-    else { audioRef.current.play().catch(() => { }); setIsPlaying(true); }
+    setIsPlaying(!isPlaying);
   };
 
   // Auto-scroll text area on segment change
@@ -307,10 +304,15 @@ export default function BirthdaySurprise() {
         <StarryNight />
         <FloatingHearts />
 
-        {/* Background audio */}
-        <audio ref={audioRef} loop>
-          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
-        </audio>
+        {/* Background audio from YouTube (hidden) */}
+        <div className="hidden">
+          <ReactPlayer 
+            url="https://www.youtube.com/watch?v=ShZ978fBl6Y"
+            playing={isPlaying}
+            loop={true}
+            volume={0.7}
+          />
+        </div>
 
         <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-16">
           <div className="w-full max-w-6xl">

@@ -557,12 +557,9 @@ html = f"""<!DOCTYPE html>
   <p class="welcome-message">This space was made just for you...</p>
 </div>
 
-<!-- AUDIO PLAYER -->
-<audio id="bg-music" loop>
-  <!-- Using a royalty-free emotional acoustic track. 
-       Note: You can easily replace this link with any mp3 of a specific song. -->
-  <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_2202dfb141.mp3?filename=always-with-me-always-with-you-piano-123473.mp3" type="audio/mpeg">
-</audio>
+<!-- AUDIO PLAYER (YouTube Invisible Embed) -->
+<div id="youtube-player" style="display:none; position:absolute; width:0; height:0; z-index:-1;"></div>
+
 
 <!-- MAIN CONTENT -->
 <div id="main-content">
@@ -751,6 +748,26 @@ html = f"""<!DOCTYPE html>
   }}
   drawSnow();
 
+  // ========== YOUTUBE INVISIBLE PLAYER ==========
+  var ytPlayer;
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  function onYouTubeIframeAPIReady() {{
+    ytPlayer = new YT.Player('youtube-player', {{
+      height: '0',
+      width: '0',
+      videoId: 'Yc6T9iY9edw', // Beautiful touching acoustic best friends song
+      playerVars: {{
+        'playsinline': 1,
+        'autoplay': 0,
+        'controls': 0,
+      }}
+    }});
+  }}
+
   // ========== LOGIN ==========
   const PASSWORD = "hilyn";
   const loginScreen = document.getElementById("login-screen");
@@ -758,13 +775,17 @@ html = f"""<!DOCTYPE html>
   const mainContent = document.getElementById("main-content");
   const pwInput = document.getElementById("pw-input");
   const pwError = document.getElementById("pw-error");
-  const bgMusic = document.getElementById("bg-music");
 
   function checkPassword() {{
     if (pwInput.value.trim().toLowerCase() === PASSWORD) {{
       // Start music on first interaction
-      bgMusic.volume = 0.5;
-      bgMusic.play().catch(e => console.log("Audio play failed:", e));
+      try {{
+        if (ytPlayer && typeof ytPlayer.playVideo === 'function') {{
+          ytPlayer.unMute();
+          ytPlayer.setVolume(60);
+          ytPlayer.playVideo();
+        }}
+      }} catch(e) {{ console.log(e); }}
 
       // Hide login
       loginScreen.classList.add("hide");
