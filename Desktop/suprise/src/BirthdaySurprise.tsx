@@ -307,7 +307,7 @@ export default function BirthdaySurprise() {
         {/* Background audio from YouTube (hidden) */}
         <div className="hidden">
           <ReactPlayer 
-            url="https://www.youtube.com/watch?v=ShZ978fBl6Y"
+            src="https://www.youtube.com/watch?v=ShZ978fBl6Y"
             playing={isPlaying}
             loop={true}
             volume={0.7}
